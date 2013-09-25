@@ -1,11 +1,20 @@
 [% WRAPPER 'include/layout.tt' %]
 
-<div databasesList>
-  <ul>
+<div id=databasesList>
+  <table>
+    <tr>
+        <th>Database Name</th>
+        <th>Number of Table</th>
+        <th>Last Updated at</th>
+    </tr>
 [% FOR database in databases %]
-    <li>[% database %]</li>
+    <tr>
+        <td>[% database.name %]</td>
+        <td>[% database.num_of_tables %]</td>
+        <td>[% database.last_updated_at %]</td>
+    </tr>
 [% END %]
-  </ul>
+  </table>
 </div>
 
 [% END %]
