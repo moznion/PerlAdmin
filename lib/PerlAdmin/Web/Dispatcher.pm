@@ -4,9 +4,14 @@ use warnings;
 use utf8;
 use Amon2::Web::Dispatcher::Lite;
 
+use PerlAdmin::Service::Database;
+
 any '/' => sub {
     my ($c) = @_;
-    return $c->render('index.tt');
+
+    my @databases = PerlAdmin::Service::Database->select_all_databases;
+
+    return $c->render('index.tt' => { databases => \@databases, });
 };
 
 post '/account/logout' => sub {
