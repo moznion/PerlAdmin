@@ -9,7 +9,7 @@
     </tr>
 [% FOR database in databases %]
     <tr>
-        <td>[% database.name %]</td>
+        <td><a href="/[% database.name %]">[% database.name %]</a></td>
         <td>[% database.num_of_tables %]</td>
         <td>[% database.last_updated_at %]</td>
     </tr>
