@@ -9,7 +9,8 @@ use PerlAdmin::DB;
 sub select_all_databases {
     my ($class, $c) = @_;
 
-    my $dbh = $c->{dbh} || PerlAdmin::DB->build_dbh;
+    $c->{dbh} ||= PerlAdmin::DB->build_dbh($c);
+    my $dbh = $c->{dbh};
 
     $dbh->{HandleError} = sub {
         Carp::cluck($_[0]);
@@ -19,7 +20,6 @@ sub select_all_databases {
         $dbh->do(q{SET SESSION sql_mode=STRICT_TRANS_TABLES;});
     }
 
-    # my $driver = $c->dbh->{Driver}->{Name};
     my $driver = $dbh->{Driver}->{Name};
     if ($driver eq 'mysql') {
         my @databases = map { @$_ } @{
