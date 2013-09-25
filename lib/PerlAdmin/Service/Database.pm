@@ -2,40 +2,15 @@ package PerlAdmin::Service::Database;
 use strict;
 use warnings;
 use utf8;
-
 use Carp;
-use DBI;
+
+use PerlAdmin::DB;
 
 sub select_all_databases {
-    # my $c = shift;
-    my $class = shift;
+    my ($class, $c) = @_;
 
-    # my @config = @{$c->config->{database}};
+    my $dbh = $c->{dbh} || PerlAdmin::DB->build_dbh;
 
-    my $dsn = 'dbi:mysql:';
-    # if (defined $dbhost) {
-    #     $dsn .= "host=$dbhost;";
-    # }
-    # if (defined $dbport) {
-    #     $dsn .= "port=$dbport;";
-    # }
-    my $username = 'root';
-    my $password = '';
-
-    my $database = [
-        $dsn,
-        $username,
-        $password,
-    ];
-
-    my @config = @$database;
-
-    $config[3]->{mysql_enable_utf8} ||= 1;
-    $config[3]->{ShowErrorStatement} ||= 1;
-    $config[3]->{RaiseError} = 1;
-    my $dbh = DBI->connect(
-        @config
-    );# or MyAdmin::Exception->throw($DBI::errstr);
     $dbh->{HandleError} = sub {
         Carp::cluck($_[0]);
         # MyAdmin::Exception->throw($_[0]);

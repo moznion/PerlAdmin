@@ -7,10 +7,8 @@ use Amon2::Web::Dispatcher::Lite;
 use PerlAdmin::Service::Database;
 
 any '/' => sub {
-    my ($c) = @_;
-
-    my @databases = PerlAdmin::Service::Database->select_all_databases;
-
+    my $c = shift;
+    my @databases = PerlAdmin::Service::Database->select_all_databases($c);
     return $c->render('index.tt' => { databases => \@databases, });
 };
 
