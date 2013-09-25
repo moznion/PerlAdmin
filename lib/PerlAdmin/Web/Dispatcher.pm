@@ -12,10 +12,11 @@ any '/' => sub {
     return $c->render('index.tt' => { databases => \@databases, });
 };
 
-post '/account/logout' => sub {
-    my ($c) = @_;
-    $c->session->expire();
-    return $c->redirect('/');
-};
+get '/:database_name' => sub {
+    my $c = shift;
 
+    # TODO
+
+    return $c->render('database.tt');
+};
 1;

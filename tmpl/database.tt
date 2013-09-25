@@ -1,0 +1,3 @@
+[% WRAPPER 'include/layout.tt' %]
+<h1>DB NAME</h1>
+[% END %]
