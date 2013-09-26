@@ -13,34 +13,27 @@ sub select_all_tables {
     $c->{dbh} ||= PerlAdmin::DB->build_dbh($c);
     my $dbh = $c->{dbh};
 
-    my $driver = $dbh->{Driver}->{Name};
-    if ($driver eq 'mysql') {
-        my @table_names = map { @$_ } @{
-            $dbh->selectall_arrayref(qq{SHOW TABLES FROM $database_name});
-        };
+    my @table_names = map { @$_ } @{
+    $dbh->selectall_arrayref(qq{SHOW TABLES FROM $database_name});
+    };
 
-        my @tables;
-        for my $table_name (@table_names) {
-            my $num_of_records = $dbh->selectall_arrayref(qq{SELECT COUNT(*) FROM $database_name.$table_name})->[0]->[0];
-            my $table_info     = $dbh->selectall_hashref(qq{SHOW TABLE STATUS FROM $database_name LIKE '$table_name'}, 'Name')->{$table_name};
+    my @tables;
+    for my $table_name (@table_names) {
+        my $num_of_records = $dbh->selectall_arrayref(qq{SELECT COUNT(*) FROM $database_name.$table_name})->[0]->[0];
+        my $table_info     = $dbh->selectall_hashref(qq{SHOW TABLE STATUS FROM $database_name LIKE '$table_name'}, 'Name')->{$table_name};
 
-            my $updated_at = $table_info->{Update_time} || '-';
-            my $created_at = $table_info->{Create_time};
+        my $updated_at = $table_info->{Update_time} || '-';
+        my $created_at = $table_info->{Create_time};
 
-            my $table = PerlAdmin::Model::Table->new({
+        my $table = PerlAdmin::Model::Table->new({
                 name           => $table_name,
                 num_of_records => $num_of_records,
                 updated_at     => $updated_at,
                 created_at     => $created_at,
-            });
-            push @tables, $table;
-        }
-        return @tables;
-    } elsif ($driver eq 'SQLite') {
-        return 'main';
-    } else {
-        die "This method is not supported for $driver";
+        });
+        push @tables, $table;
     }
+    return @tables;
 }
 
 1;

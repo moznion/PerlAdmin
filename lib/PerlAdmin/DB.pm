@@ -21,8 +21,13 @@ sub build_dbh {
         Carp::cluck($_[0]);
         # MyAdmin::Exception->throw($_[0]);
     };
-    if ($dbh->{Driver}->{Name} eq 'mysql') {
+
+    my $driver = $dbh->{Driver}->{Name};
+    if ($driver eq 'mysql') {
         $dbh->do(q{SET SESSION sql_mode=STRICT_TRANS_TABLES;});
+    }
+    else {
+        die "This method is not supported for $driver";
     }
 
     return $dbh;
