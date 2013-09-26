@@ -18,14 +18,6 @@ sub select_records {
     $c->{dbh} ||= PerlAdmin::DB->build_dbh($c);
     my $dbh = $c->{dbh};
 
-    $dbh->{HandleError} = sub {
-        Carp::cluck($_[0]);
-        # MyAdmin::Exception->throw($_[0]);
-    };
-    if ($dbh->{Driver}->{Name} eq 'mysql') {
-        $dbh->do(q{SET SESSION sql_mode=STRICT_TRANS_TABLES;});
-    }
-
     my $driver = $dbh->{Driver}->{Name};
     if ($driver eq 'mysql') {
         my @columns = map { $_->[0] } @{$dbh->selectall_arrayref("DESCRIBE $database_name.$table_name")};
