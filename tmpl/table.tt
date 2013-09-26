@@ -2,21 +2,21 @@
 <h1>[% table_name %]</h1>
 
 <div id=databasesList>
-  <table>
-    <tr>
-        [% i = 0 %]
-        [% FOR column in columns %]
-            [% IF i > 2 %]
-                [% IF column %]
-                    <th>...</th>
+    <table>
+        <tr>
+            [% i = 0 %]
+            [% FOR column in columns %]
+                [% IF i > 2 %]
+                    [% IF column %]
+                        <th>...</th>
+                    [% END %]
+                    [% last %]
                 [% END %]
-                [% last %]
+                <th>[% column %]</th>
+                [% i = i + 1 %]
             [% END %]
-            <th>[% column %]</th>
-            [% i = i + 1 %]
-        [% END %]
-    </tr>
-    [% FOR record in records %]
+        </tr>
+        [% FOR record in records %]
         <tr>
             [% i = 0 %]
             [% FOR field in record.fields %]
@@ -27,8 +27,8 @@
                 [% i = i + 1 %]
             [% END %]
         </tr>
-    [% END %]
-  </table>
+        [% END %]
+    </table>
 </div>
 
 [% END %]

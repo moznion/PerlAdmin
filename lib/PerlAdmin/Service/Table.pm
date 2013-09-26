@@ -14,7 +14,7 @@ sub select_all_tables {
     my $dbh = $c->{dbh};
 
     my @table_names = map { @$_ } @{
-    $dbh->selectall_arrayref(qq{SHOW TABLES FROM $database_name});
+        $dbh->selectall_arrayref(qq{SHOW TABLES FROM $database_name});
     };
 
     my @tables;
@@ -26,10 +26,10 @@ sub select_all_tables {
         my $created_at = $table_info->{Create_time};
 
         my $table = PerlAdmin::Model::Table->new({
-                name           => $table_name,
-                num_of_records => $num_of_records,
-                updated_at     => $updated_at,
-                created_at     => $created_at,
+            name           => $table_name,
+            num_of_records => $num_of_records,
+            updated_at     => $updated_at,
+            created_at     => $created_at,
         });
         push @tables, $table;
     }
