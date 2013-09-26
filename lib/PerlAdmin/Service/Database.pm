@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use utf8;
 use Carp;
-use DateTime::Format::MySQL;
+use Time::Piece::Plus;
 
 use PerlAdmin::DB;
 use PerlAdmin::Model::Database;
@@ -42,15 +42,14 @@ sub select_all_databases {
             else {
                 my $latest_epoch = 0;
                 for my $time (@updated_times) {
-                    my $epoch = DateTime::Format::MySQL->parse_datetime($time->[0])->epoch;
+                    my $epoch = Time::Piece::Plus->parse_mysql_datetime(str => $time->[0])->epoch;
                     if ($epoch > $latest_epoch) {
                         $latest_epoch = $epoch;
                     }
                 }
 
-                $last_updated_at = DateTime::Format::MySQL->format_datetime(DateTime->from_epoch(epoch => $latest_epoch));
+                $last_updated_at = Time::Piece::Plus->localtime($latest_epoch)->mysql_datetime;
             }
-            warn $last_updated_at;
 
             push @databases, PerlAdmin::Model::Database->new(
                 name            => $database_name,
