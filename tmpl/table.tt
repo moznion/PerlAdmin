@@ -1,0 +1,34 @@
+[% WRAPPER 'include/layout.tt' %]
+<h1>[% table_name %]</h1>
+
+<div id=databasesList>
+  <table>
+    <tr>
+        [% i = 0 %]
+        [% FOR column in columns %]
+            [% IF i > 2 %]
+                [% IF column %]
+                    <th>...</th>
+                [% END %]
+                [% last %]
+            [% END %]
+            <th>[% column %]</th>
+            [% i = i + 1 %]
+        [% END %]
+    </tr>
+    [% FOR record in records %]
+        <tr>
+            [% i = 0 %]
+            [% FOR field in record.fields %]
+                [% IF i > 2 %]
+                    [% last %]
+                [% END %]
+                <td>[% field %]</td>
+                [% i = i + 1 %]
+            [% END %]
+        </tr>
+    [% END %]
+  </table>
+</div>
+
+[% END %]
