@@ -28,9 +28,11 @@ get '/:database_name/:table_name' => sub {
 
     my $records = PerlAdmin::Service::Record->select_records($c, $args);
     return $c->render('table.tt' => {
-        table_name => $args->{table_name},
-        columns    => $records->{columns},
-        records    => $records->{records},
+        table_name   => $args->{table_name},
+        columns      => $records->{columns},
+        records      => $records->{records},
+        num_of_pages => $records->{num_of_pages},
+        page         => $records->{page},
     });
 };
 
@@ -39,9 +41,11 @@ get '/:database_name/:table_name/:page' => sub {
 
     my $records = PerlAdmin::Service::Record->select_records($c, $args);
     return $c->render('table.tt' => {
-        table_name => $args->{table_name},
-        columns    => $records->{columns},
-        records    => $records->{records},
+        table_name   => $args->{table_name},
+        columns      => $records->{columns},
+        records      => $records->{records},
+        num_of_pages => $records->{num_of_pages},
+        page         => $records->{page},
     });
 };
 1;

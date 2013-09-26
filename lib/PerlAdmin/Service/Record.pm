@@ -18,6 +18,10 @@ sub select_records {
     $c->{dbh} ||= PerlAdmin::DB->build_dbh($c);
     my $dbh = $c->{dbh};
 
+    my $num_of_records = $dbh->selectall_arrayref(qq{SELECT COUNT(*) FROM $database_name.$table_name})->[0]->[0];
+    my $num_of_pages   = $num_of_records / RECORDS_PER_PAGE;
+    $num_of_pages++ unless ($num_of_pages =~ /^[0-9]+$/);
+
     my @columns = map { $_->[0] } @{$dbh->selectall_arrayref("DESCRIBE $database_name.$table_name")};
     my $query = sprintf("SELECT * FROM %s.%s LIMIT %d OFFSET %d", $database_name, $table_name, RECORDS_PER_PAGE, $page * RECORDS_PER_PAGE );
     my $records = $dbh->selectall_arrayref($query);
@@ -36,8 +40,9 @@ sub select_records {
     }
 
     return +{
-        records => \@records,
-        columns => \@columns,
+        records      => \@records,
+        columns      => \@columns,
+        num_of_pages => $num_of_pages,
     }
 }
 1;
