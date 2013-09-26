@@ -6,11 +6,15 @@
     <tr>
         <th>Table Name</th>
         <th>Number of records</th>
+        <th>Updated at</th>
+        <th>Created at</th>
     </tr>
     [% FOR table in tables %]
     <tr>
-        <td><a href="/[% table.name %]">[% table.name %]</a></td>
+        <td><a href="/[% database_name %]/[% table.name %]">[% table.name %]</a></td>
         <td>[% table.num_of_records %]</td>
+        <td>[% table.updated_at %]</td>
+        <td>[% table.created_at %]</td>
     </tr>
     [% END %]
   </table>

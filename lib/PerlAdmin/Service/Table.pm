@@ -30,9 +30,16 @@ sub select_all_tables {
         my @tables;
         for my $table_name (@table_names) {
             my $num_of_records = $dbh->selectall_arrayref(qq{SELECT COUNT(*) FROM $database_name.$table_name})->[0]->[0];
+            my $table_info     = $dbh->selectall_hashref(qq{SHOW TABLE STATUS FROM $database_name LIKE '$table_name'}, 'Name')->{$table_name};
+
+            my $updated_at = $table_info->{Update_time} || 'N/A';
+            my $created_at = $table_info->{Create_time};
+
             my $table = PerlAdmin::Model::Table->new({
                 name           => $table_name,
                 num_of_records => $num_of_records,
+                updated_at     => $updated_at,
+                created_at     => $created_at,
             });
             push @tables, $table;
         }

@@ -10,7 +10,7 @@ use Class::Accessor::Lite (
         num_of_records
         data
         created_at
-        last_updated_at
+        updated_at
     )],
 );
 
