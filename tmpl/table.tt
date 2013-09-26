@@ -17,16 +17,17 @@
             [% END %]
         </tr>
         [% FOR record in records %]
-        <tr>
-            [% i = 0 %]
-            [% FOR field in record.fields %]
-                [% IF i > 2 %]
-                    [% last %]
+            <tr>
+                [% i = 0 %]
+                [% FOR field in record.fields %]
+                    [% IF i > 2 %]
+                        [% last %]
+                    [% END %]
+                    <td>[% field %]</td>
+                    [% i = i + 1 %]
                 [% END %]
-                <td>[% field %]</td>
-                [% i = i + 1 %]
-            [% END %]
-        </tr>
+                <td><a href="[% uri_for('/$database_name/$table_name/record', {index => loop.index + page * records_per_page }) %]">Details</a></td>
+            </tr>
         [% END %]
     </table>
 </div>

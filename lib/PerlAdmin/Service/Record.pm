@@ -26,23 +26,27 @@ sub select_records {
     my $query = sprintf("SELECT * FROM %s.%s LIMIT %d OFFSET %d", $database_name, $table_name, RECORDS_PER_PAGE, $page * RECORDS_PER_PAGE );
     my $records = $dbh->selectall_arrayref($query);
 
+    my $i = 0;
     my @records;
     for my $record (@$records) {
         my $fields = [];
-        my $i = 0;
+        my $j = 0;
         for my $column (@columns) {
-            $fields->[$i] = $record->[$i];
-            $i++;
+            $fields->[$j] = $record->[$j];
+            $j++;
         }
-        push @records, PerlAdmin::Model::Record->new({
+        $records[$i + $page * RECORDS_PER_PAGE] = PerlAdmin::Model::Record->new({
             fields => $fields,
         });
+        $i++;
     }
 
     return +{
-        records      => \@records,
-        columns      => \@columns,
-        num_of_pages => $num_of_pages,
+        records          => \@records,
+        columns          => \@columns,
+        num_of_pages     => $num_of_pages,
+        page             => $page,
+        records_per_page => RECORDS_PER_PAGE,
     }
 }
 1;

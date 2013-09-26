@@ -23,16 +23,27 @@ get '/:database_name' => sub {
     });
 };
 
+get '/:database_name/:table_name/record' => sub {
+    my ($c, $args) = @_;
+
+    use Data::Dumper::Concise; warn Dumper($c->session->get('perladmin.records')->[$c->request->param('index')]);
+    return $c->render('index.tt');
+};
+
 get '/:database_name/:table_name' => sub {
     my ($c, $args) = @_;
 
     my $records = PerlAdmin::Service::Record->select_records($c, $args);
+
+    $c->session->set('perladmin.records' => $records->{records});
     return $c->render('table.tt' => {
-        table_name   => $args->{table_name},
-        columns      => $records->{columns},
-        records      => $records->{records},
-        num_of_pages => $records->{num_of_pages},
-        page         => $records->{page},
+        database_name    => $args->{database_name},
+        table_name       => $args->{table_name},
+        columns          => $records->{columns},
+        records          => $records->{records},
+        num_of_pages     => $records->{num_of_pages},
+        page             => $records->{page},
+        records_per_page => $records->{records_per_page},
     });
 };
 
@@ -40,12 +51,17 @@ get '/:database_name/:table_name/:page' => sub {
     my ($c, $args) = @_;
 
     my $records = PerlAdmin::Service::Record->select_records($c, $args);
+
+    $c->session->set('perladmin.records' => $records->{records});
     return $c->render('table.tt' => {
-        table_name   => $args->{table_name},
-        columns      => $records->{columns},
-        records      => $records->{records},
-        num_of_pages => $records->{num_of_pages},
-        page         => $records->{page},
+        database_name    => $args->{database_name},
+        table_name       => $args->{table_name},
+        columns          => $records->{columns},
+        records          => $records->{records},
+        num_of_pages     => $records->{num_of_pages},
+        page             => $records->{page},
+        records_per_page => $records->{records_per_page},
     });
 };
+
 1;
