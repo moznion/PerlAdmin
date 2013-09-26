@@ -5,6 +5,7 @@ use utf8;
 use Amon2::Web::Dispatcher::Lite;
 
 use PerlAdmin::Service::Database;
+use PerlAdmin::Service::Table;
 
 any '/' => sub {
     my $c = shift;
@@ -13,10 +14,11 @@ any '/' => sub {
 };
 
 get '/:database_name' => sub {
-    my $c = shift;
-
-    # TODO
-
-    return $c->render('database.tt');
+    my ($c, $args) = @_;
+    my @tables = PerlAdmin::Service::Table->select_all_tables($c, $args);
+    return $c->render('database.tt' => {
+        tables        => \@tables,
+        database_name => $args->{database_name},
+    });
 };
 1;

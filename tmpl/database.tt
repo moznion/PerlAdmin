@@ -1,3 +1,19 @@
 [% WRAPPER 'include/layout.tt' %]
-<h1>DB NAME</h1>
+<h1>[% database_name %]</h1>
+
+<div id=databasesList>
+  <table>
+    <tr>
+        <th>Table Name</th>
+        <th>Number of records</th>
+    </tr>
+    [% FOR table in tables %]
+    <tr>
+        <td><a href="/[% table.name %]">[% table.name %]</a></td>
+        <td>[% table.num_of_records %]</td>
+    </tr>
+    [% END %]
+  </table>
+</div>
+
 [% END %]
