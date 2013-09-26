@@ -37,7 +37,7 @@ sub select_all_databases {
 
             my $last_updated_at;
             if (scalar @updated_times == 0) {
-                $last_updated_at = 'N/A';
+                $last_updated_at = '-';
             }
             else {
                 my $latest_epoch = 0;
