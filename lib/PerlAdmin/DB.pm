@@ -38,7 +38,7 @@ sub build_dbh {
 sub build_teng {
     my ($class, $c) = @_;
 
-    Teng::Schema::Loader->new({
+    Teng::Schema::Loader->load({
         dbh       => $class->build_dbh($c),
         namespace => 'PerlAdmin::DB',
     });
