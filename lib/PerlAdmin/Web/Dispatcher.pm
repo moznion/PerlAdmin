@@ -23,6 +23,13 @@ get '/:database_name' => sub {
     });
 };
 
+get '/:database_name/:table_name/schema' => sub {
+    my ($c, $args) = @_;
+
+    my $schema = PerlAdmin::Service::Table->single_schema($c, $args);
+    return $c->render('schema.tt' => { schema => $schema });
+};
+
 get '/:database_name/:table_name' => sub {
     my ($c, $args) = @_;
 

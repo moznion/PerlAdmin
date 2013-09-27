@@ -1,0 +1,9 @@
+[% WRAPPER 'include/layout.tt' %]
+
+<div class=schema>
+    <p>
+        [% schema %]
+    </p>
+</div>
+
+[% END %]

@@ -36,4 +36,15 @@ sub select_all_tables {
     return @tables;
 }
 
+sub single_schema {
+    my ($class, $c, $args) = @_;
+
+    my $database_name = $args->{database_name};
+    my $table_name    = $args->{table_name};
+
+    $c->{dbh} ||= PerlAdmin::DB->build_dbh($c);
+    my $dbh = $c->{dbh};
+
+    return join("\n", @{$dbh->selectall_arrayref(qq{SHOW CREATE TABLE $database_name.$table_name})->[0]});
+}
 1;
