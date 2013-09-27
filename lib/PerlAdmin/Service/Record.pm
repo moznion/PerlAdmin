@@ -30,21 +30,15 @@ sub select_records {
     }; # TODO now, it doesn't support for multiple primary columns.
 
     my $query = sprintf("SELECT * FROM %s.%s LIMIT %d OFFSET %d", $database_name, $table_name, RECORDS_PER_PAGE, $page * RECORDS_PER_PAGE );
-    my $records = $dbh->selectall_arrayref($query);
+    my $records = $dbh->selectall_hashref($query, $primary_column);
 
-    my $i = 0;
     my @records;
-    for my $record (@$records) {
-        my $fields = [];
-        my $j = 0;
-        for my $column (@columns) {
-            $fields->[$j] = $record->[$j];
-            $j++;
-        }
-        $records[$i + $page * RECORDS_PER_PAGE] = PerlAdmin::Model::Record->new({
-            fields => $fields,
+    for my $key (keys %$records) {
+        my $data = $records->{$key};
+        push @records, PerlAdmin::Model::Record->new({
+            fields  => $data,
+            primary => $data->{$primary_column},
         });
-        $i++;
     }
 
     return +{

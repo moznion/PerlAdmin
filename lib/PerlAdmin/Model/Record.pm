@@ -7,6 +7,7 @@ use Class::Accessor::Lite(
     new => 1,
     ro  => [qw(
         fields
+        primary
     )],
 );
 
