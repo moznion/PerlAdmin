@@ -22,16 +22,13 @@ sub select_records {
     my $num_of_pages   = $num_of_records / RECORDS_PER_PAGE;
     $num_of_pages++ unless ($num_of_pages =~ /^[0-9]+$/);
 
-    my $records_info = ($dbh->selectall_hashref("DESCRIBE $database_name.$table_name", 'Field'));
-    my $primary_column;
-    for my $field (keys %$records_info) {
-        if ($records_info->{$field}->{Key} eq 'PRI') {
-            $primary_column = $field;
-            last; # TODO now, it doesn't support for multiple primary columns.
-        }
-    }
+    my $records_info   = $dbh->selectall_arrayref("DESCRIBE $database_name.$table_name");
+    my @columns        = map { $_->[0] } @$records_info;
+    my $primary_column = do {
+        my ($primary_record) = grep { $_->[3] eq 'PRI' } @$records_info;
+        $primary_record->[0];
+    }; # TODO now, it doesn't support for multiple primary columns.
 
-    my @columns = map { $_->[0] } @{$dbh->selectall_arrayref("DESCRIBE $database_name.$table_name")};
     my $query = sprintf("SELECT * FROM %s.%s LIMIT %d OFFSET %d", $database_name, $table_name, RECORDS_PER_PAGE, $page * RECORDS_PER_PAGE );
     my $records = $dbh->selectall_arrayref($query);
 
@@ -53,6 +50,7 @@ sub select_records {
     return +{
         records          => \@records,
         columns          => \@columns,
+        primary_column   => $primary_column,
         num_of_pages     => $num_of_pages,
         page             => $page,
         records_per_page => RECORDS_PER_PAGE,
