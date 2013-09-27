@@ -48,4 +48,34 @@ sub select_records {
         records_per_page => RECORDS_PER_PAGE,
     }
 }
+
+sub single_record {
+    my ($class, $c, $args) = @_;
+
+    my $database_name = $args->{database_name};
+    my $table_name    = $args->{table_name};
+    my $primary       = $args->{primary};
+
+    $c->{dbh} ||= PerlAdmin::DB->build_dbh($c);
+    my $dbh = $c->{dbh};
+
+    my $primary_column = $class->_fetch_primary_column($dbh, $database_name, $table_name);
+
+    my $query = sprintf("SELECT * FROM %s.%s WHERE %s = '%s'", $database_name, $table_name, $primary_column, $primary);
+    my $record = $dbh->selectall_hashref($query, $primary_column);
+
+    if ($record) {
+        $record = $record->{$primary};
+    }
+
+    return $record;
+}
+
+sub _fetch_primary_column {
+    my ($class, $dbh, $database_name, $table_name) = @_;
+
+    my $records_info   = $dbh->selectall_arrayref("DESCRIBE $database_name.$table_name");
+    my ($primary_record) = grep { $_->[3] eq 'PRI' } @$records_info;
+    $primary_record->[0]; # TODO now, it doesn't support for multiple primary columns.
+}
 1;
