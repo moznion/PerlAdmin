@@ -3,10 +3,12 @@ use strict;
 use warnings;
 use utf8;
 
+use parent qw/Teng/;
+use Teng::Schema::Loader;
 use DBI;
 
 sub build_dbh {
-    my ($self, $c) = @_;
+    my ($class, $c) = @_;
 
     my @config = @{$c->config->{DBI}};
 
@@ -33,4 +35,12 @@ sub build_dbh {
     return $dbh;
 }
 
+sub build_teng {
+    my ($class, $c) = @_;
+
+    Teng::Schema::Loader->new({
+        dbh       => $class->build_dbh($c),
+        namespace => 'PerlAdmin::DB',
+    });
+}
 1;
