@@ -23,7 +23,7 @@
                     [% IF i > 2 %]
                         [% last %]
                     [% END %]
-                    <td>[% record.fields %]</td>
+                    <td>[% record.fields[key] %]</td>
                     [% i = i + 1 %]
                 [% END %]
                 <td><a href="/[% $database_name %]/[% $table_name %]/[% record.primary %]">Details</a></td>
