@@ -19,14 +19,14 @@
         [% FOR record in records %]
             <tr>
                 [% i = 0 %]
-                [% FOR field in record.fields %]
+                [% FOR key in record.fields.keys() %]
                     [% IF i > 2 %]
                         [% last %]
                     [% END %]
-                    <td>[% field %]</td>
+                    <td>[% record.fields %]</td>
                     [% i = i + 1 %]
                 [% END %]
-                <td><a href="[% uri_for('/$database_name/$table_name/record', {index => loop.index + page * records_per_page }) %]">Details</a></td>
+                <td><a href="/[% $database_name %]/[% $table_name %]/[% record.primary %]">Details</a></td>
             </tr>
         [% END %]
     </table>

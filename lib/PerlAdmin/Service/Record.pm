@@ -23,7 +23,6 @@ sub select_records {
     $num_of_pages++ unless ($num_of_pages =~ /^[0-9]+$/);
 
     my $records_info   = $dbh->selectall_arrayref("DESCRIBE $database_name.$table_name");
-    my @columns        = map { $_->[0] } @$records_info;
     my $primary_column = do {
         my ($primary_record) = grep { $_->[3] eq 'PRI' } @$records_info;
         $primary_record->[0];
@@ -43,7 +42,6 @@ sub select_records {
 
     return +{
         records          => \@records,
-        columns          => \@columns,
         primary_column   => $primary_column,
         num_of_pages     => $num_of_pages,
         page             => $page,

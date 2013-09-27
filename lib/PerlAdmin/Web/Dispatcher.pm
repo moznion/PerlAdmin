@@ -34,12 +34,12 @@ get '/:database_name/:table_name' => sub {
     my ($c, $args) = @_;
 
     my $records = PerlAdmin::Service::Record->select_records($c, $args);
+    my @columns = sort { $a cmp $b } keys %{$records->{records}->[0]->fields};
 
-    $c->session->set('perladmin.records' => $records->{records});
     return $c->render('table.tt' => {
         database_name    => $args->{database_name},
         table_name       => $args->{table_name},
-        columns          => $records->{columns},
+        columns          => \@columns,
         records          => $records->{records},
         num_of_pages     => $records->{num_of_pages},
         page             => $records->{page},
@@ -51,12 +51,12 @@ get '/:database_name/:table_name/:page' => sub {
     my ($c, $args) = @_;
 
     my $records = PerlAdmin::Service::Record->select_records($c, $args);
+    my @columns = sort { $a cmp $b } keys %{$records->{records}->[0]->fields};
 
-    $c->session->set('perladmin.records' => $records->{records});
     return $c->render('table.tt' => {
         database_name    => $args->{database_name},
         table_name       => $args->{table_name},
-        columns          => $records->{columns},
+        columns          => \@columns,
         records          => $records->{records},
         num_of_pages     => $records->{num_of_pages},
         page             => $records->{page},
